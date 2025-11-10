@@ -22,8 +22,6 @@ public class WebDriverApplication {
 
         menu.start();
 
-        CreateBD.delete();
-
         scan.close();
         connection.close();
     }
