@@ -15,20 +15,31 @@ public class CreateProcedures {
                         "END"
         );
 
-        // Sorteio de cliente
         stmt.executeUpdate("DROP PROCEDURE IF EXISTS Sorteio");
         stmt.executeUpdate(
                 "CREATE PROCEDURE Sorteio() " +
                         "BEGIN " +
                         "   DECLARE clienteSorteado BIGINT; " +
-                        "   SELECT id_cliente INTO clienteSorteado FROM clientes ORDER BY RAND() LIMIT 1; " +
+                        "   DECLARE tipoCliente VARCHAR(20); " +
+                        "   DECLARE valorVoucher DECIMAL(10,2); " +
+                        "   " +
+                        "   SELECT id INTO clienteSorteado FROM clientes ORDER BY RAND() LIMIT 1; " +
+                        "   " +
                         "   IF EXISTS(SELECT 1 FROM cliente_especial WHERE id_cliente = clienteSorteado) THEN " +
                         "       UPDATE cliente_especial SET cashback = cashback + 200 WHERE id_cliente = clienteSorteado; " +
+                        "       SET tipoCliente = 'Cliente Especial'; " +
+                        "       SET valorVoucher = 200; " +
                         "   ELSE " +
                         "       INSERT INTO cliente_especial (id_cliente, cashback) VALUES(clienteSorteado, 100); " +
+                        "       SET tipoCliente = 'Cliente Comum'; " +
+                        "       SET valorVoucher = 100; " +
                         "   END IF; " +
+                        "   " +
+                        "   SELECT clienteSorteado AS id, tipoCliente AS tipo, valorVoucher AS voucher; " +
                         "END"
         );
+
+
 
         // Venda (reduz estoque automaticamente)
         stmt.executeUpdate("DROP PROCEDURE IF EXISTS Venda");

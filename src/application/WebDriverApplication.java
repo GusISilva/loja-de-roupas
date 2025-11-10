@@ -2,7 +2,6 @@ package application;
 
 
 import database.ConnectBD;
-import database.CreateBD;
 
 import java.sql.Connection;
 import java.sql.SQLException;

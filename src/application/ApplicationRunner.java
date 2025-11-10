@@ -122,15 +122,32 @@ public class ApplicationRunner {
         double valor = Double.parseDouble(scanner.nextLine());
 
         try (Statement stmt = connection.createStatement()) {
-            String sql = String.format(
+
+            double cashback = 0.0;
+            var rs = stmt.executeQuery("SELECT cashback FROM cliente_especial WHERE id_cliente = " + idCliente);
+            if (rs.next()) {
+                cashback = rs.getDouble("cashback");
+            }
+
+            double valorFinal = valor - cashback;
+            if (valorFinal < 0) valorFinal = 0;
+
+            String sqlVenda = String.format(Locale.US,
                     "INSERT INTO venda (endereco_destino, valor_cobrado, data_hora, id_vendedor, id_cliente, id_trans) " +
-                            "VALUES ('%s', %s, NOW(), %d, %d, %d)",
-                    endereco, String.format(Locale.US, "%.2f", valor), idVendedor, idCliente, idTrans
-            );
-            stmt.executeUpdate(sql);
-            System.out.println("Venda cadastrada com sucesso!");
+                            "VALUES ('%s', %.2f, NOW(), %d, %d, %d)",
+                    endereco, valorFinal, idVendedor, idCliente, idTrans);
+            stmt.executeUpdate(sqlVenda);
+
+            if (cashback > 0) {
+                stmt.executeUpdate("DELETE FROM cliente_especial WHERE id_cliente = " + idCliente);
+                System.out.println("Cashback de R$ " + cashback + " aplicado e cliente removido da lista de especiais.");
+            }
+
+            System.out.println("Venda cadastrada com sucesso! Valor final: R$ " + valorFinal);
+
         }
     }
+
 
     private void consultarViews() throws SQLException {
         try (Statement stmt = connection.createStatement()) {
@@ -169,7 +186,7 @@ public class ApplicationRunner {
 
         while (continuar) {
             System.out.println("\n=== Menu de Procedures ===");
-            System.out.println("1 - Reajuste salarial");
+            System.out.println("1 - Reajuste da nota media");
             System.out.println("2 - Sorteio de cliente");
             System.out.println("3 - Venda (reduz estoque)");
             System.out.println("4 - Estatísticas");
@@ -184,14 +201,21 @@ public class ApplicationRunner {
                         double percentual = Double.parseDouble(scan.nextLine());
                         System.out.print("Informe a categoria (PF ou PJ): ");
                         String categoria = scan.nextLine();
-                        stmt.execute(String.format("CALL Reajuste(%.2f, '%s')", percentual, categoria));
+                        stmt.execute(String.format(Locale.US, "CALL Reajuste(%.2f, '%s')", percentual, categoria));
                         System.out.println("Reajuste aplicado!");
                         break;
 
                     case 2:
-                        stmt.execute("CALL Sorteio()");
-                        System.out.println("Sorteio executado!");
+                        var rsSorteio = stmt.executeQuery("CALL Sorteio()");
+                        if (rsSorteio.next()) {
+                            long id = rsSorteio.getLong("id");
+                            String tipo = rsSorteio.getString("tipo");
+                            double voucher = rsSorteio.getDouble("voucher");
+                            System.out.println("Cliente sorteado: ID " + id + ", Tipo: " + tipo + ", Voucher convertido em cashback: R$ " + voucher);
+                        }
                         break;
+
+
 
                     case 3:
                         System.out.print("Informe o ID do produto: ");

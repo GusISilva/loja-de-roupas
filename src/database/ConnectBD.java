@@ -3,6 +3,7 @@ package database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class ConnectBD {
     private static final String URL = "jdbc:mysql://localhost:3306/";
@@ -27,6 +28,11 @@ public class ConnectBD {
 
         String urlComBanco = URL + BANCO + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
         connection = DriverManager.getConnection(urlComBanco, USUARIO, SENHA);
+
+        try (Statement stmt = connection.createStatement()) {
+            CreateProcedures.create(stmt);
+            CreateViews.create(stmt);
+        }
 
         return connection;
     }
