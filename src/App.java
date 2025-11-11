@@ -1,13 +1,11 @@
 import java.sql.SQLException;
 
-import application.WebDriverApplication;
-import database.CreateBD;
-import application.ApplicationRunner;
+import application.LojaDeRoupasApplication;
 
 public class App {
     public static void main(String[] args) {
         try {
-            WebDriverApplication menu = new WebDriverApplication();
+            LojaDeRoupasApplication menu = new LojaDeRoupasApplication();
             menu.run();
         } catch (SQLException e) {
             System.err.println("Erro ao conectar ao banco de dados: " + e.getMessage());

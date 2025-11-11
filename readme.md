@@ -3,9 +3,9 @@
 
 ## Equipe:
 
-- Alex Rhikelme Belarmino da Mota  ( Modelo Conceitual, Modelo Lógico)
-- Diana da Silva  ( Modelo Conceitual, Modelo Lógico)
-- Gustavo Igor da Silva  ( Java, MYSQL)
+- Alex Rhikelme Belarmino da Mota
+- Diana da Silva 
+- Gustavo Igor da Silva
 
   ## Modelo Conceitual
 ![ Projeto Banco de dados- Modelo Conceitual](https://github.com/user-attachments/assets/288f0f91-7676-479a-a5b5-d09b3ad0e57e)

@@ -1,0 +1,130 @@
+-- =====================================================
+-- 1️⃣ Selecionar o banco de dados
+-- =====================================================
+USE loja_de_roupas;
+
+-- =====================================================
+-- 2️⃣ Consultar tabelas
+-- =====================================================
+
+-- Todos os clientes
+SELECT * FROM clientes;
+
+-- Clientes com ordenação
+SELECT * FROM clientes ORDER BY id DESC LIMIT 10;
+
+-- Todos os produtos (incluindo observacoes)
+SELECT id, nome, valor, observacoes FROM produtos;
+
+-- Produtos ordenados por valor
+SELECT id, nome, valor, observacoes 
+FROM produtos 
+ORDER BY valor DESC;
+
+-- Todas as vendas (tabela 'venda' se existir)
+SELECT * FROM venda;
+
+-- =====================================================
+-- 3️⃣ Testar funções
+-- =====================================================
+
+-- Idade dos clientes
+SELECT id AS cliente_id, nome, Calcular_idade(id) AS idade_calculada
+FROM clientes;
+
+-- Soma de fretes por destino
+SELECT endereco_destino AS destino, Soma_fretes(endereco_destino) AS total_fretes
+FROM venda
+GROUP BY endereco_destino;
+
+-- Total arrecadado por vendedor e dia
+SELECT DATE(data_hora) AS dia, id_vendedor AS vendedor_id, Arrecadado(DATE(data_hora), id_vendedor) AS total_vendas
+FROM venda
+GROUP BY DATE(data_hora), id_vendedor;
+
+-- =====================================================
+-- 4️⃣ Joins para auditoria
+-- =====================================================
+
+-- Clientes com suas vendas
+SELECT 
+    c.id AS cliente_id, 
+    c.nome, 
+    v.id AS venda_id, 
+    v.valor_cobrado, 
+    v.endereco_destino, 
+    v.data_hora
+FROM clientes c
+JOIN venda v ON c.id = v.id_vendedor
+ORDER BY c.id, v.data_hora;
+
+-- =====================================================
+-- 5️⃣ Consultar tabelas especiais
+-- =====================================================
+
+-- Clientes especiais
+SELECT * FROM cliente_especial;
+
+-- Funcionários especiais
+SELECT * FROM funcionario_especial;
+
+-- =====================================================
+-- 6️⃣ Consultar views
+-- =====================================================
+
+-- Listar todas as views
+SHOW FULL TABLES WHERE TABLE_TYPE LIKE 'VIEW';
+
+-- Consultar dados de uma view específica
+-- SELECT * FROM nome_da_view;  -- substitua pelo nome da view real
+
+-- =====================================================
+-- 7️⃣ Consultar procedures
+-- =====================================================
+
+-- Listar procedures do banco
+SHOW PROCEDURE STATUS WHERE Db = DATABASE();
+
+-- Executar procedure com parâmetros
+-- CALL nome_da_procedure(param1, param2); -- substitua pelos valores reais
+
+-- =====================================================
+-- 8️⃣ Consultar triggers
+-- =====================================================
+
+-- Listar triggers
+SHOW TRIGGERS;
+
+-- Mostrar criação de trigger específica
+-- SHOW CREATE TRIGGER nome_da_trigger; -- substitua pelo nome real
+
+-- =====================================================
+-- 9️⃣ Inspeção / debug
+-- =====================================================
+
+-- Colunas das tabelas
+SHOW COLUMNS FROM clientes;
+SHOW COLUMNS FROM produtos;  -- agora inclui 'observacoes'
+SHOW COLUMNS FROM venda;
+SHOW COLUMNS FROM cliente_especial;
+SHOW COLUMNS FROM funcionario_especial;
+
+-- Índices das tabelas
+SHOW INDEX FROM clientes;
+SHOW INDEX FROM produtos;
+SHOW INDEX FROM venda;
+SHOW INDEX FROM cliente_especial;
+SHOW INDEX FROM funcionario_especial;
+
+-- Status das tabelas
+SHOW TABLE STATUS WHERE Name = 'clientes';
+SHOW TABLE STATUS WHERE Name = 'produtos';
+SHOW TABLE STATUS WHERE Name = 'venda';
+SHOW TABLE STATUS WHERE Name = 'cliente_especial';
+SHOW TABLE STATUS WHERE Name = 'funcionario_especial';
+
+-- Processos em execução
+SHOW PROCESSLIST;
+
+-- Variáveis do servidor
+SHOW VARIABLES;
