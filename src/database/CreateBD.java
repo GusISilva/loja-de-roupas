@@ -22,7 +22,6 @@ public class CreateBD {
             CreateTables.create(stmt);
             CreateFunction.create(stmt);
             CreateTriggers.create(stmt);
-            CreateUser.create(stmt);
 
             System.out.println("Banco de dados criado com sucesso!");
 

@@ -27,6 +27,17 @@ class CreateTables {
         );
 
         stmt.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS funcionario (" +
+                        "id BIGINT AUTO_INCREMENT PRIMARY KEY, " +
+                        "nome VARCHAR(255) NOT NULL, " +
+                        "sexo ENUM('M', 'F', 'O'), " +
+                        "salario DECIMAL(10, 2) NOT NULL, " +
+                        "cargo ENUM('vendedor', 'gerente', 'CEO') NOT NULL" +
+                        ")"
+        );
+
+
+        stmt.executeUpdate(
                 "CREATE TABLE IF NOT EXISTS transportadora (" +
                         "id BIGINT AUTO_INCREMENT PRIMARY KEY, " +
                         "nome VARCHAR(255) NOT NULL, " +
@@ -105,6 +116,24 @@ class CreateTables {
             );
             stmt.executeUpdate(sql);
         }
+
+        System.out.println("Inserindo funcionários...");
+        String[][] funcionarios = {
+                {"Carlos", "M", "2500.00", "vendedor"},
+                {"Mariana", "F", "3000.00", "gerente"},
+                {"Rafael", "M", "2800.00", "vendedor"},
+                {"Fernanda", "F", "3500.00", "gerente"},
+                {"João", "M", "8000.00", "CEO"}
+        };
+
+        for (String[] f : funcionarios) {
+            String sql = String.format(
+                    "INSERT INTO funcionario (nome, sexo, salario, cargo) VALUES ('%s', '%s', %s, '%s')",
+                    f[0], f[1], f[2], f[3]
+            );
+            stmt.executeUpdate(sql);
+        }
+
 
         System.out.println("Inserindo vendedores...");
         for(int i = 0; i < 5; i++){

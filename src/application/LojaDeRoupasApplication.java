@@ -7,11 +7,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class WebDriverApplication {
+public class LojaDeRoupasApplication {
 
     private final Scanner scan;
 
-    public WebDriverApplication() throws SQLException {
+    public LojaDeRoupasApplication() throws SQLException {
         this.scan = new Scanner(System.in);
     }
 
